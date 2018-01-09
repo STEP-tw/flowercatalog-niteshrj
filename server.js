@@ -3,7 +3,8 @@ const timeStamp = require('./time.js').timeStamp;
 const http = require('http');
 const webapp = require('./webapp');
 const contentType = require('./contentType').contentType;
-let registered_users = [{userName:'alok',password:'1234'}];
+const PORT = 5000;
+let registered_users = [{userName:'alok',password:'1234'},{userName:'nitesh',password:'1'}];
 let toS = o=>JSON.stringify(o,null,2);
 
 let logRequest = (req,res)=>{
@@ -112,7 +113,6 @@ app.get('/logout',(req,res)=>{
   res.redirect('/login');
 });
 
-const PORT = 5000;
 let server = http.createServer(app);
 
 server.on('error',e=>console.error('**error**',e.message));
