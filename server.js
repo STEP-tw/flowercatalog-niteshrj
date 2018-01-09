@@ -3,7 +3,7 @@ const timeStamp = require('./time.js').timeStamp;
 const http = require('http');
 const webapp = require('./webapp');
 const contentType = require('./contentType').contentType;
-let registered_users = [{userName:'bhanutv',name:'Bhanu Teja Verma'},{userName:'harshab',name:'Harsha Vardhana'}];
+let registered_users = [{userName:'bhanutv',password:'1234'}];
 let toS = o=>JSON.stringify(o,null,2);
 
 let logRequest = (req,res)=>{
@@ -74,8 +74,9 @@ app.get('default',(req,res)=>{
   console.log(req.url);
   if(req.url=='/')
      req.url='/home.html';
-  if(req.url=="guestBook.html"){
-    req.url=='/guestBookLogin.html';
+  if(req.url=="/guestBook.html"){
+    res.redirect('/guestBookLogin.html');
+    return;
   }
   if(urlExist(req.url)) {
     res.writeHead(200,{"Content-Type":contentType(req.url)});
@@ -84,7 +85,24 @@ app.get('default',(req,res)=>{
     send404Response(res);
   res.end();
 });
-
+foo=[];
+app.post('/addComment',(req,res)=>{
+    // let guestBook = fs.readFileSync("./public/guestBook.html", "utf8");
+    debugger;
+    req.on("data", function(data){
+      console.log("hello");
+      nameAndComment = qs.parse(data.toString());
+      addDateAndTime(nameAndComment);
+      // console.log(nameAndComment);
+      let foo = fs.readFileSync("./data/comments.json","utf8");
+      foo = JSON.parse(foo);
+      foo.push(nameAndComment);
+      foo = JSON.stringify(foo,null,2);
+      fs.writeFileSync("./data/comments.json",foo);
+    });
+    res.end();
+  // req.on("end",()=>onQueryStringParseEnd(url,nameAndComment,guestBook,res));
+});
 app.post('/guestBook.html',(req,res)=>{
   res.writeHead(200,{"Content-Type":contentType(req.url)});
   res.write(fs.readFileSync("./public/" + req.url));
