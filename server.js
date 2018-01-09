@@ -96,7 +96,8 @@ app.get('/guestBookLogin.html',(req,res)=>{
 
 app.post('/guestBook.html',(req,res)=>{
   let user = registered_users.find(u=>u.userName==req.body.name);
-  if(!user) {
+  let password = registered_users.find(u=>u.password==req.body.password);
+  if(!user || !password) {
     res.redirect('/guestBookLogin.html');
     res.end();
     return;
