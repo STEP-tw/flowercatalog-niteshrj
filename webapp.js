@@ -31,6 +31,7 @@ let invoke = function(req,res){
 const initialize = function(){
   this._handlers = {GET:{},POST:{}};
   this._preprocess = [];
+  this.contents = "";
 };
 const get = function(url,handler){
   this._handlers.GET[url] = handler;
@@ -49,11 +50,12 @@ const main = function(req,res){
   res.redirect = redirect.bind(res);
   req.urlIsOneOf = urlIsOneOf.bind(req);
   req.cookies = parseCookies(req.headers.cookie||'');
-  let content="";
-  req.on('data',data=>content+=data.toString())
+  req.on('data',(data)=>{
+    this.contents+=data.toString();
+  });
   req.on('end',()=>{
-    req.body = parseBody(content);
-    content="";
+    req.body = parseBody(this.contents);
+    this.contents="";
     this._preprocess.forEach(middleware=>{
       if(res.finished) return;
       middleware(req,res);

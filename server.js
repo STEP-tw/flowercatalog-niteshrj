@@ -2,10 +2,13 @@ let fs = require('fs');
 const timeStamp = require('./time.js').timeStamp;
 const http = require('http');
 const webapp = require('./webapp');
+const nameAndCommentFormatted = require('./public/js/formattedNameAndComment.js').nameAndCommentFormatted;
 const contentType = require('./contentType').contentType;
-const PORT = 5000;
+const utils = require('./utils.js');
+let guestBook = fs.readFileSync("./public/guestBook.html","utf8");
 let registered_users = [{userName:'alok',password:'1234'},{userName:'nitesh',password:'1'}];
 let toS = o=>JSON.stringify(o,null,2);
+let updatedGuestBook = "";
 
 let logRequest = (req,res)=>{
   let text = ['------------------------------',
@@ -15,7 +18,6 @@ let logRequest = (req,res)=>{
     `COOKIES=> ${toS(req.cookies)}`,
     `BODY=> ${toS(req.body)}`,''].join('\n');
   fs.appendFile('request.log',text,()=>{});
-
   console.log(`${req.method} ${req.url}`);
 }
 let loadUser = (req,res)=>{
@@ -27,43 +29,16 @@ let loadUser = (req,res)=>{
 };
 let redirectLoggedInUserToHome = (req,res)=>{
   if(req.urlIsOneOf(['/guestBookLogin.html']) && req.user) res.redirect('/guestBook.html');
-}
+};
 let redirectLoggedOutUserToLogin = (req,res)=>{
-  if(req.urlIsOneOf(['/guestBook.html']) && !req.user) res.redirect('/guestBookLogin.html');
-}
+  if(req.urlIsOneOf(['/hfihifi']) && !req.user) res.redirect('/login');
+};
 
 let app = webapp.create();
-// console.log(app);
 app.use(logRequest);
 app.use(loadUser);
 app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
-
-app.get('/login',(req,res)=>{
-  res.setHeader('Content-type','text/html');
-  if(req.cookies.logInFailed) res.write('<p>logIn Failed</p>');
-  res.write('<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>');
-  res.end();
-});
-
-app.post('/login',(req,res)=>{
-  let user = registered_users.find(u=>u.userName==req.body.userName);
-  if(!user) {
-    res.setHeader('Set-Cookie',`logInFailed=true`);
-    res.redirect('/login');
-    return;
-  }
-  let sessionid = new Date().getTime();
-  res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
-  user.sessionid = sessionid;
-  res.redirect('/home');
-});
-
-app.get('/home',(req,res)=>{
-  res.setHeader('Content-type','text/html');
-  res.write(`<p>Hello ${req.user.name}</p>`);
-  res.end();
-});
 
 const send404Response = function(res) {
   res.writeHead(404, {"Content-Type":"text/plain"});
@@ -74,7 +49,6 @@ const urlExist = function(url){
 }
 
 app.get('default',(req,res)=>{
-  console.log(req.url);
   if(req.url=='/')
      req.url='/home.html';
   if(urlExist(req.url)) {
@@ -82,6 +56,12 @@ app.get('default',(req,res)=>{
     res.write(fs.readFileSync("./public/" + req.url));
   }else
     send404Response(res);
+  res.end();
+});
+
+app.get('/guestBook.html',(req,res)=>{
+  res.writeHead(200,{"Content-Type":'text/html'});
+  res.write(updatedGuestBook);
   res.end();
 });
 
@@ -106,6 +86,30 @@ app.post('/guestBook.html',(req,res)=>{
   res.write(fs.readFileSync("./public/" + req.url));
   res.end();
 });
+const addCommentToGuestBook = function(guestBook, nameAndComment) {
+  const newGuestBook = guestBook.replace('<h2 id="replacer"></h2>',nameAndComment);
+  return newGuestBook;
+}
+
+let commentsData = [];
+
+app.post('/addComment',(req,res)=>{
+  let nameAndComment = req.body;
+  nameAndComment["date"]=utils.getDate();
+  nameAndComment["time"]=utils.getTime();
+
+  let comments = fs.readFileSync("./data/comments.json","utf8");
+  comments = JSON.parse(comments);
+  comments.push(nameAndComment);
+  comments = JSON.stringify(comments,null,2);
+  fs.writeFileSync('./data/comments.json',comments);
+
+  let formattedNameAndComment = nameAndCommentFormatted(nameAndComment);
+  commentsData.unshift(formattedNameAndComment);
+  updatedGuestBook = addCommentToGuestBook(guestBook,commentsData.join(""));
+  res.write(updatedGuestBook);
+  res.end();
+});
 
 app.get('/logout',(req,res)=>{
   res.setHeader('Set-Cookie',[`loginFailed=false,Expires=${new Date(1).toUTCString()}`,`sessionid=0,Expires=${new Date(1).toUTCString()}`]);
@@ -113,6 +117,7 @@ app.get('/logout',(req,res)=>{
   res.redirect('/login');
 });
 
+const PORT = 5000;
 let server = http.createServer(app);
 
 server.on('error',e=>console.error('**error**',e.message));
