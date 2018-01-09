@@ -25,10 +25,10 @@ let loadUser = (req,res)=>{
   }
 };
 let redirectLoggedInUserToHome = (req,res)=>{
-  if(req.urlIsOneOf(['/','/login']) && req.user) res.redirect('/home');
+  if(req.urlIsOneOf(['/guestBookLogin.html']) && req.user) res.redirect('/guestBook.html');
 }
 let redirectLoggedOutUserToLogin = (req,res)=>{
-  if(req.urlIsOneOf(['/home','/logout']) && !req.user) res.redirect('/login');
+  if(req.urlIsOneOf(['/guestBook.html']) && !req.user) res.redirect('/guestBookLogin.html');
 }
 
 let app = webapp.create();
@@ -37,16 +37,16 @@ app.use(logRequest);
 app.use(loadUser);
 app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
+
 app.get('/login',(req,res)=>{
   res.setHeader('Content-type','text/html');
   if(req.cookies.logInFailed) res.write('<p>logIn Failed</p>');
   res.write('<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>');
   res.end();
 });
+
 app.post('/login',(req,res)=>{
-
   let user = registered_users.find(u=>u.userName==req.body.userName);
-
   if(!user) {
     res.setHeader('Set-Cookie',`logInFailed=true`);
     res.redirect('/login');
@@ -57,6 +57,7 @@ app.post('/login',(req,res)=>{
   user.sessionid = sessionid;
   res.redirect('/home');
 });
+
 app.get('/home',(req,res)=>{
   res.setHeader('Content-type','text/html');
   res.write(`<p>Hello ${req.user.name}</p>`);
@@ -67,7 +68,6 @@ const send404Response = function(res) {
   res.writeHead(404, {"Content-Type":"text/plain"});
   res.write("Error 404: Page not found!");
 }
-
 const urlExist = function(url){
   return fs.existsSync("./public/" + url)
 }
@@ -76,10 +76,6 @@ app.get('default',(req,res)=>{
   console.log(req.url);
   if(req.url=='/')
      req.url='/home.html';
-  if(req.url=="/guestBook.html"){
-    res.redirect('/guestBookLogin.html');
-    return;
-  }
   if(urlExist(req.url)) {
     res.writeHead(200,{"Content-Type":contentType(req.url)});
     res.write(fs.readFileSync("./public/" + req.url));
