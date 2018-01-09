@@ -3,7 +3,7 @@ const timeStamp = require('./time.js').timeStamp;
 const http = require('http');
 const webapp = require('./webapp');
 const contentType = require('./contentType').contentType;
-let registered_users = [{userName:'bhanutv',password:'1234'}];
+let registered_users = [{userName:'alok',password:'1234'}];
 let toS = o=>JSON.stringify(o,null,2);
 
 let logRequest = (req,res)=>{
@@ -44,7 +44,9 @@ app.get('/login',(req,res)=>{
   res.end();
 });
 app.post('/login',(req,res)=>{
+
   let user = registered_users.find(u=>u.userName==req.body.userName);
+
   if(!user) {
     res.setHeader('Set-Cookie',`logInFailed=true`);
     res.redirect('/login');
@@ -85,28 +87,28 @@ app.get('default',(req,res)=>{
     send404Response(res);
   res.end();
 });
-foo=[];
-app.post('/addComment',(req,res)=>{
-    // let guestBook = fs.readFileSync("./public/guestBook.html", "utf8");
-    debugger;
-    req.on("data", function(data){
-      console.log("hello");
-      nameAndComment = qs.parse(data.toString());
-      addDateAndTime(nameAndComment);
-      // console.log(nameAndComment);
-      let foo = fs.readFileSync("./data/comments.json","utf8");
-      foo = JSON.parse(foo);
-      foo.push(nameAndComment);
-      foo = JSON.stringify(foo,null,2);
-      fs.writeFileSync("./data/comments.json",foo);
-    });
-    res.end();
-  // req.on("end",()=>onQueryStringParseEnd(url,nameAndComment,guestBook,res));
+
+app.get('/guestBookLogin.html',(req,res)=>{
+  res.setHeader('Content-type','text/html');
+  res.write(fs.readFileSync("./public/" + req.url));
+  res.end();
 });
+
 app.post('/guestBook.html',(req,res)=>{
+  let user = registered_users.find(u=>u.userName==req.body.name);
+  if(!user) {
+    res.redirect('/guestBookLogin.html');
+    res.end();
+    return;
+  }
+  let sessionid = new Date().getTime();
+  res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
+  user.sessionid = sessionid;
   res.writeHead(200,{"Content-Type":contentType(req.url)});
   res.write(fs.readFileSync("./public/" + req.url));
+  res.end();
 });
+
 app.get('/logout',(req,res)=>{
   res.setHeader('Set-Cookie',[`loginFailed=false,Expires=${new Date(1).toUTCString()}`,`sessionid=0,Expires=${new Date(1).toUTCString()}`]);
   delete req.user.sessionid;
