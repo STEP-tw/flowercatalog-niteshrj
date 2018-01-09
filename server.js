@@ -74,6 +74,9 @@ app.get('default',(req,res)=>{
   console.log(req.url);
   if(req.url=='/')
      req.url='/home.html';
+  if(req.url=="guestBook.html"){
+    req.url=='/guestBookLogin.html';
+  }
   if(urlExist(req.url)) {
     res.writeHead(200,{"Content-Type":contentType(req.url)});
     res.write(fs.readFileSync("./public/" + req.url));
