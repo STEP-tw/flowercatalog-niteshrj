@@ -1,0 +1,39 @@
+#all-contents{
+  font-family: sans-serif;
+}
+#mainBox{
+  height: 1000px;
+  width: 1300px;
+  margin-left: 180px;
+  align-content: center;
+}
+#heading{
+  text-align: center;
+  font-size: 50px;
+  color: orange;
+  font-family: serif;
+}
+#line{
+  border: none;
+  height: 3px;
+  color: grey;
+  background: grey;
+}
+#comment{
+  rows: 5;
+  font-size: 20px;
+}
+#backLink{
+  position: absolute;
+  font-size: 40px;
+  margin-left: 470px;
+  padding-top: 5px;
+}
+#submit{
+  height: 30px;
+  width: 70px;
+}
+#name{
+  font-size: 20px;
+  size:30px;
+}

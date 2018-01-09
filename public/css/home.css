@@ -1,0 +1,64 @@
+#allContents{
+  font-family: sans-serif;
+}
+#heading{
+  text-align: center;
+  font-size: 60px;
+}
+#mainBox{
+  height: 1000px;
+  width: 1300px;
+  margin-left: 180px;
+  align-content: center;
+}
+#lineBelowHeading{
+  border: none;
+  height: 0.5px;
+  background: #c7c5c5;
+}
+#secondHeading{
+  font-family: serif;
+  font-size: 25px;
+  color: orange;
+  float: right;
+  margin-right: 100px;
+}
+#lineBelow2ndHeading{
+  border: none;
+  height: 3px;
+  background: #c7c5c5;
+}
+#image{
+  height: 700px;
+  width: 1000px;
+  float: left;
+  /*margin-top: 100px;*/
+  /*background-image: freshorigins.jpg;*/
+}
+#imageDiv{
+  height: 700px;
+  width: 1000px;
+}
+#link{
+  /*float: right;*/
+  position: absolute;
+  float: left;
+  margin-left: 1000px;
+  margin-top: 300px;
+}
+#guestBook{
+  margin-left: 10px;
+}
+#flowerCatalogHeading{
+  position:absolute;
+  margin-left: 825px;
+  /*margin-top: 1px;*/
+}
+#lineBelow{
+  /*position: absolute;*/
+  margin-top: 110px;
+}
+#secondHeading{
+  font-weight: bold;
+  font-size: 35px;
+}

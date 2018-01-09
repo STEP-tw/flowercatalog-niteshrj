@@ -1,0 +1,50 @@
+#all-contents{
+  font-family: sans-serif;
+}
+#mainBox{
+  height: 1000px;
+  width: 1300px;
+  margin-left: 180px;
+  align-content: center;
+}
+#imageDiv{
+  height: 700px;
+  width: 1000px;
+}
+#image{
+  height: 700px;
+  width: 700px;
+  float: left;
+  /*background-image: freshorigins.jpg;*/
+}
+#heading{
+  text-align: center;
+  font-size: 50px;
+  color: orange;
+  font-family: serif;
+}
+#lineBelowHeading{
+  border: none;
+  height: 3px;
+  background: #c7c5c5;
+}
+#link{
+  position: absolute;
+  float: left;
+  margin-left: 680px;
+  margin-top: 300px;
+  /*margin-below: 500px;*/
+}
+#para{
+  /*height: 50px;*/
+  width: 600px;
+}
+#book{
+  margin-left: 40px;
+}
+#backLink{
+  position: absolute;
+  font-size: 40px;
+  margin-left: 430px;
+  padding-top: 5px;
+}

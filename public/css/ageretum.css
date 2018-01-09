@@ -1,0 +1,45 @@
+#all-contents{
+  font-family: sans-serif;
+}
+#mainBox{
+  height: 1000px;
+  width: 1300px;
+  margin-left: 180px;
+  align-content: center;
+}
+#imageDiv{
+  height: 700px;
+  width: 1000px;
+}
+#image{
+  height: 600px;
+  width: 700px;
+  float: left;
+}
+#heading{
+  text-align: center;
+  font-size: 50px;
+  color: orange;
+  font-family: serif;
+}
+#lineBelowHeading{
+  border: none;
+  height: 3px;
+  height: 5px;
+  background: #c7c5c5;
+}
+#link{
+  position: absolute;
+  float: left;
+  margin-left: 710px;
+  margin-top: 200px;
+}
+#para{
+  width: 600px;
+}
+#backLink{
+  position: absolute;
+  font-size: 40px;
+  margin-left: 480px;
+  padding-top: 5px;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="./css/guestBook.css">
+  <!-- <script src="./js/guestBookComments.js">
+  </script> -->
+  <script type="text/javascript" href="./data/getComments.js">
+
+  </script>
+</head>
+
+<body id="all-contents">
+  <div id="mainBox">
+    <div id="linkToPreviousPage">
+      <a id="backLink" href="home.html"><<</a>
+    </div>
+    <h1 id="heading"> Guest Book </h1>
+    <div id="comment">
+      <h1 id="askComment">Leave a comment</h1>
+      <form action="/addComment" method="post">
+        Name: <input type="text" id="name" name="name"><br><br>
+        Comment: <textarea type="text" id="comment" name="comment" cols="90" style="height:70px"></textarea>
+        <br><br>
+        <button id="submit" type="submit">Submit</button>
+      </form>
+    <hr id="line"/>
+    <h2 id="replacer"></h2>
+    </div>
+  </div>
+</body>
+
+</html>
